@@ -43,17 +43,20 @@ export default function App() {
 
   const submit = useSubmit();
 
-  const [query, setQuery] = useState(q || '');
-  useEffect(() => {
-    setQuery(q || '');
-  }, [q]);
+  const searching = navigation.location && new URLSearchParams(navigation.location.search).has('q');
+
+  // const [query, setQuery] = useState(q || '');
 
   // useEffect(() => {
-  //   const searchField = document.getElementById('q');
-  //   if (searchField instanceof HTMLInputElement) {
-  //     searchField.value = q || '';
-  //   }
+  //   setQuery(q || '');
   // }, [q]);
+
+  useEffect(() => {
+    const searchField = document.getElementById('q');
+    if (searchField instanceof HTMLInputElement) {
+      searchField.value = q || '';
+    }
+  }, [q]);
 
   return (
     <html lang="en">
@@ -74,15 +77,20 @@ export default function App() {
             >
               <input
                 id="q"
-                /* defaultValue={q || ''} */
+                className={ navigation.state === 'loading' && !searching ? 'loading' : ''}
+                defaultValue={q || ''}
                 aria-label="Search contacts"
                 placeholder="Search"
                 type="search"
                 name="q"
-                onChange={(event) => setQuery(event.currentTarget.value)}
-                value={query}
+                //onChange={(event) => setQuery(event.currentTarget.value)}
+                //value={query}
               />
-              <div id="search-spinner" aria-hidden hidden={true} />
+              <div
+                id="search-spinner"
+                aria-hidden
+                hidden={!searching}
+              />
             </Form>
             <Form method="post">
               <button type="submit">New</button>
